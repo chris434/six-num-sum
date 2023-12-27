@@ -4,7 +4,12 @@ import autoprefixer from 'autoprefixer';
 export default {
     content: ['./src/**/*.{html,js,svelte,ts}'],
     theme: {
-        extend: {},
+        extend: {
+            screens: {
+                'xs': '430px',
+                'xs2': '375px'
+            }
+        },
     },
     plugins: [],
 }

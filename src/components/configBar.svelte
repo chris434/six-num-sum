@@ -1,8 +1,20 @@
 <script>
+	import { getRandomNumber } from "../utils/math";
+	import { getProblem } from "../utils/sumProblem";
 	import Button from "./button.svelte";
 	import Select from "./select.svelte";
     const options =['any','1-10','10-100','100-1000','1000+']
     let configBarToggle =true
+
+    function generateProblem(){
+      const problems= getProblem([100,299],[10,100])
+      const problemsLength = problems.expressions.length
+      if(problemsLength===0) return generateProblem()
+      const randomIndex = getRandomNumber(0,problemsLength)
+        const problem=problems.expressions[randomIndex]
+        console.log(problem)
+    }
+  
 
 </script>
 <section class="p-5 shadow-xl" >
@@ -13,7 +25,7 @@
        <Select label="Target" {options}/>
     </div>
     <div class="flex gap-3 items-center xs2:flex-row flex-col justify-center">
-       <Button>New problem</Button>
+       <Button onclick={() =>generateProblem()}>New problem</Button>
         <div>or</div>
         <Button>Use same problem</Button>
     </div>

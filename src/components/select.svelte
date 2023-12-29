@@ -1,7 +1,7 @@
-<script lang="ts">
+<script lang="ts" generics="T">
 	import Label from "./label.svelte";
 
-    export let options:string[]
+    export let options: readonly T[] 
     export let label:string 
     export let id:string=label
 </script>

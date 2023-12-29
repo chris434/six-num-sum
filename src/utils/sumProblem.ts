@@ -1,3 +1,4 @@
+import type { TargetSumRangeType, TargetSumType } from "../types/probkemTypes";
 import { getRandomNumber } from "./math";
 
 type ResultsType = {
@@ -47,15 +48,14 @@ function getRandomNumbers(sumRange:RangeType) {
     return randomNumbers
 }
 
-function findAllExpressions(numbers:number[],targetRange:RangeType) {
+function findAllExpressions(numbers:number[],targetRange:TargetSumType) {
     const results: ResultsType[] = [];
-    const [min,max] = targetRange||[-1,-1]
+
 
   function generateExpressions(currentExpression:string, remainingNumbers:number[]) {
     if (remainingNumbers.length === 0) {
         const result = calculate(currentExpression);
-        const formattedResult=new RegExp(/\.|-/).test(result?.toString()||'')
-      if (result&&!formattedResult&&min===-1||result&& result>=min&&result<=max&&!formattedResult) {
+        if (hasResult(result)&&(isAny(targetRange)||isGreaterThan1000(targetRange,result)||(Array.isArray(targetRange)&&  result>=targetRange[0]&&result<=targetRange[1]))) {
         results.push({ expression: currentExpression,result });
       }
       return;
@@ -78,12 +78,21 @@ function findAllExpressions(numbers:number[],targetRange:RangeType) {
   return results;
 }
 
-export function getProblem(sumRange:RangeType,targetRange:RangeType) {
+export function getProblem(sumRange:number[],targetRange:TargetSumType) {
     const randomNumbers=getRandomNumbers(sumRange)
     const expressions = findAllExpressions(randomNumbers, targetRange);
    
     return { expressions,numbers:randomNumbers }
 }
 
-
+function isAny(targetRange:TargetSumType) {
+   return targetRange==='any'
+}
+function isGreaterThan1000(targetRange: TargetSumType,result:number ):result is number {
+    return targetRange==='+1000'&& result>1000
+}
+function hasResult(result: number | undefined):result is number {
+    const resultAccepted = new RegExp(/\.|-/).test(result?.toString() || '')
+    return Boolean(!resultAccepted&&result) 
+}
 

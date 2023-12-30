@@ -1,4 +1,4 @@
-import type { TargetSumRangeType, TargetSumType } from "../types/probkemTypes";
+import type { TargetSumType } from "../types/probkemTypes";
 import { getRandomNumber } from "./math";
 
 type ResultsType = {

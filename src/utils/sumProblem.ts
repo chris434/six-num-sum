@@ -38,7 +38,7 @@ function calculate(expression: string) {
   return result;
 }
 
-function getRandomNumbers(sumRange:RangeType) {
+export function getRandomNumbers(sumRange:RangeType) {
     const [min, max] =sumRange||[1,1000]
     const randomNumbers = []
     for (let i = 0; i < 6; i++) {
@@ -78,8 +78,8 @@ function findAllExpressions(numbers:number[],targetRange:TargetSumType) {
   return results;
 }
 
-export function getProblem(sumRange:number[],targetRange:TargetSumType) {
-    const randomNumbers=getRandomNumbers(sumRange)
+export function getProblem(targetRange:TargetSumType,randomNumbers:number[]) {
+
     const expressions = findAllExpressions(randomNumbers, targetRange);
    
     return { expressions,numbers:randomNumbers }

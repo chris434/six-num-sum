@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { getProblem } from "../utils/sumProblem";
+import { getProblem, getRandomNumbers } from "../utils/sumProblem";
 import { getRandomNumber } from "../utils/math";
 import type { TargetSumRangeType, TargetSumType } from "../types/probkemTypes";
 
@@ -11,12 +11,14 @@ function problemStore() {
     function generateProblem(sumRange: string, targetRange: TargetSumRangeType) {
  
         function setProblem(sumRange: number[], targetRange: TargetSumType) {
-          const problems= getProblem(sumRange,targetRange)
+            const randomNumbers=getRandomNumbers(sumRange)
+            const problems = getProblem(targetRange,randomNumbers)
+            
       const problemsLength = problems.expressions.length
       if(problemsLength===0) return setProblem(sumRange, targetRange)
       const randomIndex = getRandomNumber(0,problemsLength)
         const problem=problems.expressions[randomIndex]
-       return problem
+       return {problem,numbers:randomNumbers}
    }
 
 

@@ -2,6 +2,7 @@ import { writable } from "svelte/store";
 import { getProblem, getRandomNumbers } from "../utils/sumProblem";
 import { getRandomNumber } from "../utils/math";
 import type { TargetSumRangeType, TargetSumType } from "../types/probkemTypes";
+import { shuffleArray } from "../utils/array";
 
 function problemStore() {
     const { subscribe, set, update } = writable()
@@ -17,8 +18,9 @@ function problemStore() {
       const problemsLength = problems.expressions.length
       if(problemsLength===0) return setProblem(sumRange, targetRange)
       const randomIndex = getRandomNumber(0,problemsLength)
-        const problem=problems.expressions[randomIndex]
-       return {problem,numbers:randomNumbers}
+      const problem = problems.expressions[randomIndex]
+      const shuffledNumbers = shuffleArray(randomNumbers)
+       return {problem,numbers:shuffledNumbers}
    }
 
 

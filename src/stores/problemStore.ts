@@ -4,8 +4,16 @@ import { getRandomNumber } from "../utils/math";
 import type { TargetSumRangeType, TargetSumType } from "../types/probkemTypes";
 import { shuffleArray } from "../utils/array";
 
+type ProblemStoreType = {
+    problem: {
+        expression: string
+        result:number
+    },
+    numbers:number[]
+}
+
 function problemStore() {
-    const { subscribe, set, update } = writable()
+    const { subscribe, set, update } = writable< ProblemStoreType>({problem:{expression:"",result:0},numbers:[]})
 
    
     
@@ -27,10 +35,10 @@ function problemStore() {
         const sumRangeArray = sumRange.split('-').map(Number)
          const mappedTargetRange= targetRange==='any'||targetRange==='+1000'?targetRange: targetRange.split('-').map(Number)
         const problem = setProblem(sumRangeArray, mappedTargetRange)
-        console.log(problem)
+        set(problem)
     }
 
 return {subscribe,generateProblem}
 }
-export type ProblemStoreType = ReturnType<typeof problemStore>
+export type ProblemStoreReturnType = ReturnType<typeof problemStore>
 export const createProblem= problemStore()

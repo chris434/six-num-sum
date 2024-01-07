@@ -5,13 +5,16 @@
 	import OperatorButtons from "../components/operatorButtons.svelte";
 	import SumBar from "../components/sumBar.svelte";
 	import TargetBar from "../components/targetBar.svelte";
+  import { getProblem } from '../contexts/problemContext';
 
   let toggleAnswer=false
+  const problem= getProblem()
 
 
 
 
 </script>
+{#if $problem.numbers.length}
 <div class="flex justify-center p-5 ">
   <NumberButtons/>
 </div>
@@ -26,6 +29,7 @@
       <OperatorButtons/>
 </div>
 </div>
+{/if}
 
    
 

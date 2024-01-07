@@ -9,14 +9,21 @@ export type ProblemNumbersType = {
 export type OperatorType = '+' | '-'|'*'|'/'
 export type ProblemActionsTypes='number'|'operator'
  
-// export type userExpressionType = {
-//   value: number | OperatorType
-// action:ProblemActionsType
-// }
 
 export type userExpressionType = {
   action:'number'
   value: number 
+  index: number
+  result: number
+} | {
+   action:'operator'
+  value: OperatorType
+  result: number
+}
+export type PropUserExpressionType = {
+  action:'number'
+  value: number 
+  index: number
 } | {
    action:'operator'
   value: OperatorType

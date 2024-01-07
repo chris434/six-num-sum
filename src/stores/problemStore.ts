@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import { getProblem, getRandomNumbers,getUserResult } from "../utils/sumProblem";
 import { getRandomNumber } from "../utils/math";
-import type { OperatorType,  ProblemNumbersType, TargetSumRangeType, TargetSumType, userExpressionType } from "../types/probkemTypes";
+import type { ProblemNumbersType, PropUserExpressionType, TargetSumRangeType, TargetSumType, userExpressionType } from "../types/probkemTypes";
 import { shuffleArray } from "../utils/array";
 
 
@@ -10,7 +10,7 @@ type ProblemActions='number' | 'operator'
 type ProblemStoreType = {
     action: ProblemActions
     userResult:number
-    userExpression: userExpressionType[]
+    userExpression:  userExpressionType[]
     problem: {
         expression: string
         result:number
@@ -49,22 +49,21 @@ function problemStore() {
         })
     }
 
-    function addToSum(selectedExpression: userExpressionType, index?: number) {
+    function addToSum(selectedExpression: PropUserExpressionType, index?: number) {
 
         update((problem) => {
             const { action, value } = selectedExpression
             const {numbers,userResult,userExpression}=problem
-            const newUserExpression = [...userExpression, { ...selectedExpression }] 
             
             const mappedNumbers= action==='number'? numbers.map((number, i) => {
                 if(i===index) return {...number,used:true}
                 return number
-            }) :numbers
+            }) : numbers
             
             const prevuesUserExpression = problem.userExpression.at(-1)
             const canAdd = prevuesUserExpression?.action === 'operator' && action === 'number'
             const newUserResult= canAdd? getUserResult(value,problem.userResult,prevuesUserExpression.value):action==='number'?value: userResult
-
+            const newUserExpression = [...userExpression, { ...selectedExpression,result:newUserResult }] 
             
 
             
@@ -95,7 +94,29 @@ function problemStore() {
         })
     }
 
-return {subscribe,generateProblem,addToSum,clearSum}
+    function deleteLast() {
+        update(problem => {
+            const { userExpression } = problem
+            if(!userExpression.length) return problem
+            const lastUserExpression =userExpression.at(-1)
+           problem.userExpression.pop()
+            
+            const newNumbers = lastUserExpression?.action === 'number' ? problem.numbers.map((numberObj, i) => {
+                if (lastUserExpression.index === i) return { ...numberObj, used: false }
+                return numberObj
+            }):problem.numbers
+
+            const newUserResult=problem.userExpression.at(-1)?.result||0
+            return {
+                ...problem,
+                userResult:newUserResult,
+                action: lastUserExpression?.action||'number' ,
+                numbers:newNumbers
+            }
+        })
+    }
+
+return {subscribe,generateProblem,addToSum,clearSum,deleteLast}
 }
 export type ProblemStoreReturnType = ReturnType<typeof problemStore>
 export const createProblem= problemStore()

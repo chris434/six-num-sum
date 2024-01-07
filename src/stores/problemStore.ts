@@ -80,7 +80,22 @@ function problemStore() {
     
     }
 
-return {subscribe,generateProblem,addToSum}
+    function clearSum() {
+        update(problem => {
+            const newNumbers = problem.numbers.map(numberObj => {
+                return {...numberObj,used:false}
+            })
+            return {
+                ...problem,
+                userExpression: [],
+                userResult: 0,
+                action: 'number',
+                numbers:newNumbers
+            }
+        })
+    }
+
+return {subscribe,generateProblem,addToSum,clearSum}
 }
 export type ProblemStoreReturnType = ReturnType<typeof problemStore>
 export const createProblem= problemStore()

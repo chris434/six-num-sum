@@ -13,25 +13,25 @@ export function getUserResult(value:number,currentUserResult:number,prevuesOpera
   }
 
 function calculateSwitch(operator: OperatorType,value: number,currentResult: number) {
-
+  let newResult=currentResult
    switch (operator) {
       case '+':
-       value += currentResult;
+     newResult=value + currentResult;
         break;
       case '-':
-        value -= currentResult;
+      newResult=currentResult-value
         break;
       case '*':
-        value *= currentResult;
+       newResult=value *currentResult;
         break;
       case '/':
-         value /= currentResult;
+       newResult=value /currentResult;
          break;
      default:
-       value=currentResult;
+      newResult=currentResult;
         break;
    }
-  return value
+  return newResult
 }
 
 function calculate(expression: string) {

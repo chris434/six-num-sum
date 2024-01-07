@@ -5,7 +5,34 @@ type ResultsType = {
     expression:string
     result: number
 }
-type RangeType = number[]|null
+type RangeType = number[] | null
+type OperatorType = '+' | '-'|'*'|'/'
+
+export function getUserResult(value:number,currentUserResult:number,prevuesOperator:OperatorType) {
+  return currentUserResult = calculateSwitch(prevuesOperator, value, currentUserResult)
+  }
+
+function calculateSwitch(operator: OperatorType,value: number,currentResult: number) {
+
+   switch (operator) {
+      case '+':
+       value += currentResult;
+        break;
+      case '-':
+        value -= currentResult;
+        break;
+      case '*':
+        value *= currentResult;
+        break;
+      case '/':
+         value /= currentResult;
+         break;
+     default:
+       value=currentResult;
+        break;
+   }
+  return value
+}
 
 function calculate(expression: string) {
   const operators = expression.split(/[\d.]+/).filter(Boolean);

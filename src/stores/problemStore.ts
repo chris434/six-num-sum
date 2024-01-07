@@ -1,17 +1,16 @@
 import { writable } from "svelte/store";
-import { getProblem, getRandomNumbers } from "../utils/sumProblem";
+import { getProblem, getRandomNumbers,getUserResult } from "../utils/sumProblem";
 import { getRandomNumber } from "../utils/math";
-import type { ProblemNumbersType, TargetSumRangeType, TargetSumType } from "../types/probkemTypes";
+import type { OperatorType,  ProblemNumbersType, TargetSumRangeType, TargetSumType, userExpressionType } from "../types/probkemTypes";
 import { shuffleArray } from "../utils/array";
+
 
 type ProblemActions='number' | 'operator'
 
 type ProblemStoreType = {
     action: ProblemActions
-    userExpression: {
-        value: number | string
-        action:ProblemActions
-    }[]
+    userResult:number
+    userExpression: userExpressionType[]
     problem: {
         expression: string
         result:number
@@ -19,8 +18,10 @@ type ProblemStoreType = {
     numbers:ProblemNumbersType
 }
 
+
+
 function problemStore() {
-    const { subscribe, set, update } = writable< ProblemStoreType>({action:'number', userExpression:[], problem:{expression:"",result:0},numbers:[]})
+    const { subscribe, set, update } = writable<ProblemStoreType >({action:'number',userResult:0, userExpression:[], problem:{expression:"",result:0},numbers:[]})
 
    
     
@@ -48,18 +49,30 @@ function problemStore() {
         })
     }
 
-    function addToSum(value: number|string,index?: number) {
+    function addToSum(selectedExpression: userExpressionType, index?: number) {
+
         update((problem) => {
-            const action = problem.action
-            const userExpression = [...problem.userExpression, { value, action }] 
-            const mappedNumbers= action==='number'? problem.numbers.map((number, i) => {
+            const { action, value } = selectedExpression
+            const {numbers,userResult,userExpression}=problem
+            const newUserExpression = [...userExpression, { ...selectedExpression }] 
+            
+            const mappedNumbers= action==='number'? numbers.map((number, i) => {
                 if(i===index) return {...number,used:true}
                 return number
-             }):problem.numbers
+            }) :numbers
+            
+            const prevuesUserExpression = problem.userExpression.at(-1)
+            const canAdd = prevuesUserExpression?.action === 'operator' && action === 'number'
+            const newUserResult= canAdd? getUserResult(value,problem.userResult,prevuesUserExpression.value):action==='number'?value: userResult
+
+            
+
+            
             return {
                 ...problem,
-                userExpression,
-                action: action==='number'?'operator':'number',
+                userResult:newUserResult,
+                userExpression:newUserExpression,
+                action:action==='number'?'operator':'number',
                 numbers:mappedNumbers
             }
          

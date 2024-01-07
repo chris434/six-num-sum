@@ -6,3 +6,18 @@ export type ProblemNumbersType = {
     number: number
     used:boolean
 }[]
+export type OperatorType = '+' | '-'|'*'|'/'
+export type ProblemActionsTypes='number'|'operator'
+ 
+// export type userExpressionType = {
+//   value: number | OperatorType
+// action:ProblemActionsType
+// }
+
+export type userExpressionType = {
+  action:'number'
+  value: number 
+} | {
+   action:'operator'
+  value: OperatorType
+}

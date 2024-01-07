@@ -48,14 +48,14 @@ function problemStore() {
         })
     }
 
-    function addToSum(index: number,value: number|string) {
+    function addToSum(value: number|string,index?: number) {
         update((problem) => {
             const action = problem.action
             const userExpression = [...problem.userExpression, { value, action }] 
-            const mappedNumbers= problem.numbers.map((number, i) => {
+            const mappedNumbers= action==='number'? problem.numbers.map((number, i) => {
                 if(i===index) return {...number,used:true}
                 return number
-             })
+             }):problem.numbers
             return {
                 ...problem,
                 userExpression,

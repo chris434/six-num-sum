@@ -1,10 +1,12 @@
 <script>
 	import FunctionButtons from "../components/FunctionButtons.svelte";
+	import AnswerBar from "../components/answerBar.svelte";
 	import NumberButtons from "../components/numberButtons.svelte";
 	import OperatorButtons from "../components/operatorButtons.svelte";
 	import SumBar from "../components/sumBar.svelte";
 	import TargetBar from "../components/targetBar.svelte";
 
+  let toggleAnswer=false
 
 
 
@@ -17,7 +19,10 @@
   <div class="lg:w-4/12 md:w-6/12 sm:w-8/12 w-full  ">
   <TargetBar/>
         <SumBar/>
-        <FunctionButtons/>
+        {#if toggleAnswer}
+        <AnswerBar/>
+        {/if}
+        <FunctionButtons bind:toggleAnswer/>
       <OperatorButtons/>
 </div>
 </div>

@@ -10,7 +10,7 @@
 
 </script>
 
-<section class="flex  justify-between gap-5 p-3  rounded-lg {disabled?'opacity-25':''}">
+<section class="flex  justify-center gap-5 p-3  rounded-lg {disabled?'opacity-25':''}">
     {#if $problem.numbers.length}
     {#each OPERATORS as operator }
         <Button {disabled}  onclick={()=> addToSum({action:'operator',value:operator})} className="w-12 h-12">{operator}</Button>

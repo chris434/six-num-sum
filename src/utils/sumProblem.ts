@@ -1,4 +1,4 @@
-import type { TargetSumType } from "../types/probkemTypes";
+import type { ProblemNumbersType, TargetSumType } from "../types/probkemTypes";
 import { getRandomNumber } from "./math";
 
 type ResultsType = {
@@ -42,17 +42,17 @@ export function getRandomNumbers(sumRange:RangeType) {
     const [min, max] =sumRange||[1,1000]
     const randomNumbers = []
     for (let i = 0; i < 6; i++) {
-         randomNumbers.push(getRandomNumber(min, max))
+      randomNumbers.push({number: getRandomNumber(min, max),used:false })
         
     }
     return randomNumbers
 }
 
-function findAllExpressions(numbers:number[],targetRange:TargetSumType) {
+function findAllExpressions(numbers:ProblemNumbersType,targetRange:TargetSumType) {
     const results: ResultsType[] = [];
 
 
-  function generateExpressions(currentExpression:string, remainingNumbers:number[]) {
+  function generateExpressions(currentExpression:string, remainingNumbers:ProblemNumbersType) {
     if (remainingNumbers.length === 0) {
         const result = calculate(currentExpression);
         if (hasResult(result)&&(isAny(targetRange)||isGreaterThan1000(targetRange,result)||(Array.isArray(targetRange)&&  result>=targetRange[0]&&result<=targetRange[1]))) {
@@ -61,7 +61,7 @@ function findAllExpressions(numbers:number[],targetRange:TargetSumType) {
       return;
     }
 
-    const currentNumber = remainingNumbers[0];
+    const currentNumber = remainingNumbers[0].number
     const restNumbers = remainingNumbers.slice(1);
 
     generateExpressions(`${currentExpression}+${currentNumber}`, restNumbers);
@@ -73,12 +73,12 @@ function findAllExpressions(numbers:number[],targetRange:TargetSumType) {
     }
   }
 
-  generateExpressions(numbers[0].toString(), numbers.slice(1));
+  generateExpressions(numbers[0].number.toString(), numbers.slice(1));
 
   return results;
 }
 
-export function getProblem(targetRange:TargetSumType,randomNumbers:number[]) {
+export function getProblem(targetRange:TargetSumType,randomNumbers:ProblemNumbersType) {
 
     const expressions = findAllExpressions(randomNumbers, targetRange);
    

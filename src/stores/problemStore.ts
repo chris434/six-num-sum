@@ -1,11 +1,26 @@
 import { writable } from "svelte/store";
 import { getProblem, getRandomNumbers } from "../utils/sumProblem";
 import { getRandomNumber } from "../utils/math";
-import type { TargetSumRangeType, TargetSumType } from "../types/probkemTypes";
+import type { ProblemNumbersType, TargetSumRangeType, TargetSumType } from "../types/probkemTypes";
 import { shuffleArray } from "../utils/array";
 
+type ProblemActions='number' | 'operator'
+
+type ProblemStoreType = {
+    action: ProblemActions
+    userExpression: {
+        value: number | string
+        action:ProblemActions
+    }[]
+    problem: {
+        expression: string
+        result:number
+    },
+    numbers:ProblemNumbersType
+}
+
 function problemStore() {
-    const { subscribe, set, update } = writable()
+    const { subscribe, set, update } = writable< ProblemStoreType>({action:'number', userExpression:[], problem:{expression:"",result:0},numbers:[]})
 
    
     
@@ -20,17 +35,39 @@ function problemStore() {
       const randomIndex = getRandomNumber(0,problemsLength)
       const problem = problems.expressions[randomIndex]
       const shuffledNumbers = shuffleArray(randomNumbers)
-       return {problem,numbers:shuffledNumbers}
+       return { problem,numbers:shuffledNumbers}
    }
 
 
         const sumRangeArray = sumRange.split('-').map(Number)
          const mappedTargetRange= targetRange==='any'||targetRange==='+1000'?targetRange: targetRange.split('-').map(Number)
         const problem = setProblem(sumRangeArray, mappedTargetRange)
-        console.log(problem)
+
+        update(storedProblem => {
+            return {...storedProblem,...problem}
+        })
     }
 
-return {subscribe,generateProblem}
+    function addToSum(index: number,value: number|string) {
+        update((problem) => {
+            const action = problem.action
+            const userExpression = [...problem.userExpression, { value, action }] 
+            const mappedNumbers= problem.numbers.map((number, i) => {
+                if(i===index) return {...number,used:true}
+                return number
+             })
+            return {
+                ...problem,
+                userExpression,
+                action: action==='number'?'operator':'number',
+                numbers:mappedNumbers
+            }
+         
+         })
+    
+    }
+
+return {subscribe,generateProblem,addToSum}
 }
-export type ProblemStoreType = ReturnType<typeof problemStore>
+export type ProblemStoreReturnType = ReturnType<typeof problemStore>
 export const createProblem= problemStore()

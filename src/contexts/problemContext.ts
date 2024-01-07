@@ -1,5 +1,5 @@
 import { setContext ,getContext} from "svelte";
-import { createProblem,type ProblemStoreType } from "../stores/problemStore";
+import { createProblem,type ProblemStoreReturnType } from "../stores/problemStore";
 
 
 export function setProblem() {
@@ -7,5 +7,5 @@ export function setProblem() {
 }
 
 export function getProblem() {
-return getContext<ProblemStoreType>('problem')
+return getContext<ProblemStoreReturnType>('problem')
 }

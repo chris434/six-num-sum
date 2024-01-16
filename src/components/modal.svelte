@@ -7,6 +7,10 @@
     const problem = getProblem()
     
    $:if(dialog&&$problem.answerHasBeenChecked&&$problem.answerIsCorrect) dialog.showModal()
+
+   function closeModal() {
+    dialog.close()
+   }
     
 </script>
 
@@ -15,7 +19,7 @@
   <SumBar/>
   <AnswerBar/>
   <div class="flex sm:flex-row flex-col justify-center gap-5 p-5">
-    <Button>close</Button>
+    <Button onclick={closeModal}>close</Button>
      <Button>reset</Button>
       <Button>new problem</Button>
   </div>

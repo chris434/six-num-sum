@@ -10,7 +10,9 @@ type ProblemActions='number' | 'operator'
 type ProblemStoreType = {
     action: ProblemActions
     userResult:number
-    userExpression:  userExpressionType[]
+    userExpression: userExpressionType[]
+    answerHasBeenChecked: boolean
+    answerIsCorrect: boolean
     problem: {
         expression: string
         result:number
@@ -21,7 +23,7 @@ type ProblemStoreType = {
 
 
 function problemStore() {
-    const { subscribe, set, update } = writable<ProblemStoreType >({action:'number',userResult:0, userExpression:[], problem:{expression:"",result:0},numbers:[]})
+    const { subscribe, set, update } = writable<ProblemStoreType >({action:'number',userResult:0, userExpression:[], problem:{expression:"",result:0},numbers:[],answerHasBeenChecked:false,answerIsCorrect:false})
 
    
     
@@ -72,7 +74,8 @@ function problemStore() {
                 userResult:newUserResult,
                 userExpression:newUserExpression,
                 action:action==='number'?'operator':'number',
-                numbers:mappedNumbers
+                numbers: mappedNumbers,
+                answerHasBeenChecked:false
             }
          
          })
@@ -89,15 +92,38 @@ function problemStore() {
                 userExpression: [],
                 userResult: 0,
                 action: 'number',
-                numbers:newNumbers
+                numbers: newNumbers,
+                answerHasBeenChecked:false
             }
         })
     }
 
+    function checkAnswer() {
+     
+	
+
+    update(problem => {
+    let answerIsCorrect = false
+    const userExpression = problem.userExpression
+    const answer = problem.problem.result
+    const userAnswer=problem.userExpression.at(-1)
+    const userExpressionLength=userExpression.filter(({action})=> {
+	return action==='number'
+    })
+    if(userExpressionLength.length===6&&userAnswer&& answer===userAnswer.result) answerIsCorrect=true
+      return {
+                ...problem,
+                answerHasBeenChecked: true,
+                answerIsCorrect
+            }
+        })
+	
+}
+
     function deleteLast() {
         update(problem => {
             const { userExpression } = problem
-            if(!userExpression.length) return problem
+            if (!userExpression.length) return {...problem, answerHasBeenChecked:false}
             const lastUserExpression =userExpression.at(-1)
            problem.userExpression.pop()
             
@@ -111,12 +137,13 @@ function problemStore() {
                 ...problem,
                 userResult:newUserResult,
                 action: lastUserExpression?.action||'number' ,
-                numbers:newNumbers
+                numbers: newNumbers,
+                answerHasBeenChecked:false
             }
         })
     }
 
-return {subscribe,generateProblem,addToSum,clearSum,deleteLast}
+return {subscribe,generateProblem,addToSum,clearSum,deleteLast,checkAnswer}
 }
 export type ProblemStoreReturnType = ReturnType<typeof problemStore>
 export const createProblem= problemStore()

@@ -13,53 +13,55 @@ export function getUserResult(value:number,currentUserResult:number,prevuesOpera
   }
 
 function calculateSwitch(operator: OperatorType,value: number,currentResult: number) {
-  let newResult=currentResult
+
    switch (operator) {
       case '+':
-     newResult=value + currentResult;
+    currentResult+=value;
         break;
       case '-':
-      newResult=currentResult-value
+      currentResult-=value
         break;
       case '*':
-       newResult=value *currentResult;
+       currentResult*=value;
         break;
       case '/':
-       newResult=value /currentResult;
+       currentResult/=value;
          break;
      default:
-      newResult=currentResult;
+      currentResult
         break;
    }
-  return newResult
+  return currentResult
 }
 
 function calculate(expression: string) {
-  const operators = expression.split(/[\d.]+/).filter(Boolean);
+  const operators = expression.split(/[\d.]+/).filter(Boolean) as  OperatorType[]
   const numbers = expression.split(/[+\-*/]/).map(Number);
-  let result = numbers[0];
-
+  let result = numbers[0]
+console.log(numbers)
   for (let i = 0; i < operators.length; i++) {
-    switch (operators[i]) {
-      case '+':
-        result += numbers[i + 1];
-        break;
-      case '-':
-        result -= numbers[i + 1];
-        break;
-      case '*':
-        result *= numbers[i + 1];
-        break;
-      case '/':
-        if (numbers[i + 1] !== 0) {
-          result /= numbers[i + 1];
-        } else {
-          return undefined; // Avoid division by zero
-        }
-        break;
-      default:
-        break;
-    }
+    // switch (operators[i]) {
+    //   case '+':
+    //     result += numbers[i + 1];
+    //     break;
+    //   case '-':
+    //     result -= numbers[i + 1];
+    //     break;
+    //   case '*':
+    //     result *= numbers[i + 1];
+    //     break;
+    //   case '/':
+    //     if (numbers[i + 1] !== 0) {
+    //       result /= numbers[i + 1];
+    //     } else {
+    //       return undefined; // Avoid division by zero
+    //     }
+    //     break;
+    //   default:
+    //     break;
+    // }
+    result = calculateSwitch(operators[i], numbers[i + 1], result)
+    console.log(result)
   }
 
   return result;
@@ -94,10 +96,8 @@ function findAllExpressions(numbers:ProblemNumbersType,targetRange:TargetSumType
     generateExpressions(`${currentExpression}+${currentNumber}`, restNumbers);
     generateExpressions(`${currentExpression}-${currentNumber}`, restNumbers);
     generateExpressions(`${currentExpression}*${currentNumber}`, restNumbers);
-
-    if (currentNumber !== 0) {
-      generateExpressions(`${currentExpression}/${currentNumber}`, restNumbers);
-    }
+    generateExpressions(`${currentExpression}/${currentNumber}`, restNumbers);
+    
   }
 
   generateExpressions(numbers[0].number.toString(), numbers.slice(1));

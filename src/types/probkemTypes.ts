@@ -28,3 +28,5 @@ export type PropUserExpressionType = {
    action:'operator'
   value: OperatorType
 }
+
+export type isAnswerConstructType='unknown'|'yes'|'no'

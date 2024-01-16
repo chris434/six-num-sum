@@ -1,17 +1,18 @@
 import { writable } from "svelte/store";
-import { getProblem, getRandomNumbers } from "../utils/sumProblem";
+import { getProblem, getRandomNumbers,getUserResult } from "../utils/sumProblem";
 import { getRandomNumber } from "../utils/math";
-import type { ProblemNumbersType, TargetSumRangeType, TargetSumType } from "../types/probkemTypes";
+import type { ProblemNumbersType, PropUserExpressionType, TargetSumRangeType, TargetSumType, userExpressionType } from "../types/probkemTypes";
 import { shuffleArray } from "../utils/array";
+
 
 type ProblemActions='number' | 'operator'
 
 type ProblemStoreType = {
     action: ProblemActions
-    userExpression: {
-        value: number | string
-        action:ProblemActions
-    }[]
+    userResult:number
+    userExpression: userExpressionType[]
+    answerHasBeenChecked: boolean
+    answerIsCorrect: boolean
     problem: {
         expression: string
         result:number
@@ -19,8 +20,10 @@ type ProblemStoreType = {
     numbers:ProblemNumbersType
 }
 
+
+
 function problemStore() {
-    const { subscribe, set, update } = writable< ProblemStoreType>({action:'number', userExpression:[], problem:{expression:"",result:0},numbers:[]})
+    const { subscribe, set, update } = writable<ProblemStoreType >({action:'number',userResult:0, userExpression:[], problem:{expression:"",result:0},numbers:[],answerHasBeenChecked:false,answerIsCorrect:false})
 
    
     
@@ -48,26 +51,99 @@ function problemStore() {
         })
     }
 
-    function addToSum(value: number|string,index?: number) {
+    function addToSum(selectedExpression: PropUserExpressionType, index?: number) {
+
         update((problem) => {
-            const action = problem.action
-            const userExpression = [...problem.userExpression, { value, action }] 
-            const mappedNumbers= action==='number'? problem.numbers.map((number, i) => {
+            const { action, value } = selectedExpression
+            const {numbers,userResult,userExpression}=problem
+            
+            const mappedNumbers= action==='number'? numbers.map((number, i) => {
                 if(i===index) return {...number,used:true}
                 return number
-             }):problem.numbers
+            }) : numbers
+            
+            const prevuesUserExpression = problem.userExpression.at(-1)
+            const canAdd = prevuesUserExpression?.action === 'operator' && action === 'number'
+            const newUserResult= canAdd? getUserResult(value,problem.userResult,prevuesUserExpression.value):action==='number'?value: userResult
+            const newUserExpression = [...userExpression, { ...selectedExpression,result:newUserResult }] 
+            
+
+            
             return {
                 ...problem,
-                userExpression,
-                action: action==='number'?'operator':'number',
-                numbers:mappedNumbers
+                userResult:newUserResult,
+                userExpression:newUserExpression,
+                action:action==='number'?'operator':'number',
+                numbers: mappedNumbers,
+                answerHasBeenChecked:false
             }
          
          })
     
     }
 
-return {subscribe,generateProblem,addToSum}
+    function clearSum() {
+        update(problem => {
+            const newNumbers = problem.numbers.map(numberObj => {
+                return {...numberObj,used:false}
+            })
+            return {
+                ...problem,
+                userExpression: [],
+                userResult: 0,
+                action: 'number',
+                numbers: newNumbers,
+                answerHasBeenChecked:false
+            }
+        })
+    }
+
+    function checkAnswer() {
+     
+	
+
+    update(problem => {
+    let answerIsCorrect = false
+    const userExpression = problem.userExpression
+    const answer = problem.problem.result
+    const userAnswer=problem.userExpression.at(-1)
+    const userExpressionLength=userExpression.filter(({action})=> {
+	return action==='number'
+    })
+    if(userExpressionLength.length===6&&userAnswer&& answer===userAnswer.result) answerIsCorrect=true
+      return {
+                ...problem,
+                answerHasBeenChecked: true,
+                answerIsCorrect
+            }
+        })
+	
+}
+
+    function deleteLast() {
+        update(problem => {
+            const { userExpression } = problem
+            if (!userExpression.length) return {...problem, answerHasBeenChecked:false}
+            const lastUserExpression =userExpression.at(-1)
+           problem.userExpression.pop()
+            
+            const newNumbers = lastUserExpression?.action === 'number' ? problem.numbers.map((numberObj, i) => {
+                if (lastUserExpression.index === i) return { ...numberObj, used: false }
+                return numberObj
+            }):problem.numbers
+
+            const newUserResult=problem.userExpression.at(-1)?.result||0
+            return {
+                ...problem,
+                userResult:newUserResult,
+                action: lastUserExpression?.action||'number' ,
+                numbers: newNumbers,
+                answerHasBeenChecked:false
+            }
+        })
+    }
+
+return {subscribe,generateProblem,addToSum,clearSum,deleteLast,checkAnswer}
 }
 export type ProblemStoreReturnType = ReturnType<typeof problemStore>
 export const createProblem= problemStore()

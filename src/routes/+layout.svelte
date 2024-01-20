@@ -4,13 +4,14 @@
 	import { setProblem } from '../contexts/problemContext'
 	import Header from '../components/header.svelte';
 	import Modal from '../components/modal.svelte';
+	import HeaderConfigBar from '../components/headerConfigBar.svelte';
 
 	setProblem()
 </script>
 <div class="relitve">
 <div class="">
 <Header/>
-<ConfigBar padding shadow/>
+<HeaderConfigBar/>
 <slot/>
 </div>
 

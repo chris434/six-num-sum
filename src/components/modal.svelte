@@ -6,6 +6,7 @@
 	import SumBar from './sumBar.svelte';
     let dialog:HTMLDialogElement
     const problem = getProblem()
+    const {reset}=problem
     
    $:if(dialog&&$problem.answerHasBeenChecked&&$problem.answerIsCorrect) dialog.showModal()
 
@@ -22,7 +23,10 @@
   <div class="flex sm:flex-row flex-col justify-center gap-5 items-center">
     <div class="flex gap-5">
        <Button onclick={closeModal}>close</Button>
-     <Button>reset</Button>
+     <Button onclick={()=>{
+      closeModal()
+      reset()
+      }}>reset</Button>
     </div>
    
     <div>or</div>

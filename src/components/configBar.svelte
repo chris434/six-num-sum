@@ -13,7 +13,7 @@
     export let shadow =false
     export let padding =false
 
-  const {generateProblem}=  getProblem()
+  const {generateProblem,reset}=  getProblem()
   
 
 </script>

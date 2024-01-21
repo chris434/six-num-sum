@@ -13,6 +13,7 @@ type ProblemStoreType = {
     userExpression: userExpressionType[]
     answerHasBeenChecked: boolean
     answerIsCorrect: boolean
+    answerHasBeenShown: boolean
     problem: {
         expression: string
         result:number
@@ -23,7 +24,7 @@ type ProblemStoreType = {
 
 
 function problemStore() {
-    const INITIAL_DATA:ProblemStoreType={action:'number',userResult:0, userExpression:[], problem:{expression:"",result:0},numbers:[],answerHasBeenChecked:false,answerIsCorrect:false}
+    const INITIAL_DATA:ProblemStoreType={action:'number',userResult:0, userExpression:[], problem:{expression:"",result:0},numbers:[],answerHasBeenChecked:false,answerIsCorrect:false,answerHasBeenShown:false}
     const { subscribe, set, update } = writable<ProblemStoreType>(INITIAL_DATA)
 
    
@@ -161,7 +162,12 @@ function problemStore() {
             }
         })
     }
-return {subscribe,generateProblem,addToSum,clearSum,deleteLast,checkAnswer,reset}
+    function setAnswerHasBeenShown() {
+        update(problem => {
+            return {...problem,answerHasBeenShown:true}
+        })
+    }
+return {subscribe,generateProblem,addToSum,clearSum,deleteLast,checkAnswer,reset,setAnswerHasBeenShown}
 }
 export type ProblemStoreReturnType = ReturnType<typeof problemStore>
 export const createProblem= problemStore()

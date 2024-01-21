@@ -2,9 +2,15 @@
 	import Button from "./button.svelte";
 	import {getProblem}from '../contexts/problemContext'
 const problem=getProblem();
-const {clearSum,deleteLast,checkAnswer}=problem
+const {clearSum,deleteLast,checkAnswer,setAnswerHasBeenShown}=problem
 export let toggleAnswer =false
 
+function setToggleAnswer(){
+	toggleAnswer = !toggleAnswer
+	setAnswerHasBeenShown()
+}
+
+$: if(!$problem.answerHasBeenShown) toggleAnswer=false
 
 
 </script>
@@ -13,5 +19,5 @@ export let toggleAnswer =false
 <Button onclick={clearSum}>clear</Button>
 <Button onclick={deleteLast}>delete</Button>
 <Button onclick={checkAnswer}>check answer</Button>
-<Button onclick={()=>toggleAnswer = !toggleAnswer}>{toggleAnswer?'hide':'show'} answer</Button>
+<Button onclick={setToggleAnswer}>{toggleAnswer?'hide':'show'} answer</Button>
 </section>

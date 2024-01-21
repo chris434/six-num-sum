@@ -22,7 +22,7 @@
   <div class="lg:w-5/12 md:w-7/12 sm:w-8/12 w-full  ">
   <TargetBar/>
         <SumBar/>
-        {#if toggleAnswer}
+        {#if toggleAnswer&& $problem.answerHasBeenShown}
         <AnswerBar/>
         {/if}
         <FunctionButtons bind:toggleAnswer/>

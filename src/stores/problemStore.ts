@@ -28,17 +28,21 @@ function problemStore() {
 
    
     
-    function generateProblem(sumRange: string, targetRange: TargetSumRangeType) {
- 
+    function generateProblem(sumRange: string, targetRange: TargetSumRangeType,sumNumbers?:ProblemNumbersType) {
+ console.log(sumNumbers)
         function setProblem(sumRange: number[], targetRange: TargetSumType) {
-            const randomNumbers=getRandomNumbers(sumRange)
+            const newSumNumbers = sumNumbers ? sumNumbers.map(numberObj => {
+                return {...numberObj,used:false}
+            }) : false
+            
+            const randomNumbers=newSumNumbers?newSumNumbers: getRandomNumbers(sumRange)
             const problems = getProblem(targetRange,randomNumbers)
             
       const problemsLength = problems.expressions.length
       if(problemsLength===0) return setProblem(sumRange, targetRange)
       const randomIndex = getRandomNumber(0,problemsLength)
       const problem = problems.expressions[randomIndex]
-      const shuffledNumbers = shuffleArray(randomNumbers)
+      const shuffledNumbers = newSumNumbers?newSumNumbers: shuffleArray(randomNumbers)
        return { problem,numbers:shuffledNumbers}
    }
 

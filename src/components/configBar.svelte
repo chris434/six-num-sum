@@ -10,6 +10,13 @@
     let sumRange:string
     let targetRange: TargetSumRangeType
   const {generateProblem}=  getProblem()
+
+  export let newProblemCb:()=>void=()=> {}
+
+   function newProblem(){
+    generateProblem(sumRange,targetRange)
+    newProblemCb()
+   }
   
 
 </script>
@@ -21,7 +28,7 @@
        <Select bind:option={targetRange}  label="Target" options={TARGET_RANGE} />
     </div>
     <div class="flex gap-3 items-center xs2:flex-row flex-col justify-center">
-       <Button onclick={() =>generateProblem(sumRange,targetRange)}>New problem</Button>
+       <Button onclick={newProblem}>New problem</Button>
         <div>or</div>
         <Button>Use same problem</Button>
     </div>

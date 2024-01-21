@@ -23,7 +23,8 @@ type ProblemStoreType = {
 
 
 function problemStore() {
-    const { subscribe, set, update } = writable<ProblemStoreType >({action:'number',userResult:0, userExpression:[], problem:{expression:"",result:0},numbers:[],answerHasBeenChecked:false,answerIsCorrect:false})
+    const INITIAL_DATA:ProblemStoreType={action:'number',userResult:0, userExpression:[], problem:{expression:"",result:0},numbers:[],answerHasBeenChecked:false,answerIsCorrect:false}
+    const { subscribe, set, update } = writable<ProblemStoreType>(INITIAL_DATA)
 
    
     
@@ -143,7 +144,22 @@ function problemStore() {
         })
     }
 
-return {subscribe,generateProblem,addToSum,clearSum,deleteLast,checkAnswer}
+    function reset() {
+
+        update(problem => {
+            const { numbers, problem: innerProblem } = problem
+            const newNumbers = numbers.map(numberObj => {
+                return {...numberObj,used:false}
+            })
+            return {
+                ...INITIAL_DATA,
+                problem:innerProblem,
+               numbers:newNumbers
+            
+            }
+        })
+    }
+return {subscribe,generateProblem,addToSum,clearSum,deleteLast,checkAnswer,reset}
 }
 export type ProblemStoreReturnType = ReturnType<typeof problemStore>
 export const createProblem= problemStore()

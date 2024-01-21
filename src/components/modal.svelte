@@ -2,11 +2,17 @@
     import {getProblem}from '../contexts/problemContext'
 	import AnswerBar from './answerBar.svelte';
 	import Button from './button.svelte';
+	import ConfigBar from './configBar.svelte';
 	import SumBar from './sumBar.svelte';
     let dialog:HTMLDialogElement
     const problem = getProblem()
+    const {reset}=problem
     
    $:if(dialog&&$problem.answerHasBeenChecked&&$problem.answerIsCorrect) dialog.showModal()
+
+   function closeModal() {
+    dialog.close()
+   }
     
 </script>
 
@@ -14,9 +20,17 @@
   <h2 class="text-2xl text-center mb-5">answer is correct</h2>
   <SumBar/>
   <AnswerBar/>
-  <div class="flex sm:flex-row flex-col justify-center gap-5 p-5">
-    <Button>close</Button>
-     <Button>reset</Button>
-      <Button>new problem</Button>
+  <div class="flex sm:flex-row flex-col justify-center gap-5 items-center">
+    <div class="flex gap-5">
+       <Button onclick={closeModal}>close</Button>
+     <Button onclick={()=>{
+      closeModal()
+      reset()
+      }}>reset</Button>
+    </div>
+   
+    <div>or</div>
+     <ConfigBar/>
   </div>
+   
 </dialog>

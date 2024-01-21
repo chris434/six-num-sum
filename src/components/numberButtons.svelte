@@ -5,7 +5,7 @@
     const problem= getProblem()
     const {addToSum}=problem
     $:disabled =$problem.action==='operator'?true:false
-
+$:console.log($problem)
 </script>
   <div class="grid xs:grid-cols-6 grid-cols-3 gap-5" >
     {#each $problem.numbers as {number,used},i}

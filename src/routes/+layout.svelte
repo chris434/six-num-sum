@@ -10,7 +10,7 @@
 <div class="relitve">
 <div class="">
 <Header/>
-<ConfigBar/>
+<ConfigBar padding shadow/>
 <slot/>
 </div>
 

@@ -47,9 +47,7 @@ function problemStore() {
          const mappedTargetRange= targetRange==='any'||targetRange==='+1000'?targetRange: targetRange.split('-').map(Number)
         const problem = setProblem(sumRangeArray, mappedTargetRange)
 
-        update(storedProblem => {
-            return {...storedProblem,...problem}
-        })
+        set({...INITIAL_DATA,...problem})
     }
 
     function addToSum(selectedExpression: PropUserExpressionType, index?: number) {

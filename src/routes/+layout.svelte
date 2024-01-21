@@ -15,6 +15,6 @@
 <slot/>
 </div>
 
-<Modal/>
+<Modal />
 </div>
 

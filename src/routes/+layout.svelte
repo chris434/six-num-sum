@@ -3,9 +3,17 @@
 	import ConfigBar from '../components/configBar.svelte';
 	import { setProblem } from '../contexts/problemContext'
 	import Header from '../components/header.svelte';
+	import Modal from '../components/modal.svelte';
 
 	setProblem()
 </script>
+<div class="relitve">
+<div class="">
 <Header/>
-<ConfigBar/>
+<ConfigBar padding shadow/>
 <slot/>
+</div>
+
+<Modal/>
+</div>
+

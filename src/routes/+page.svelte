@@ -28,7 +28,11 @@
         <FunctionButtons bind:toggleAnswer/>
 </div>
 </div>
+<div class="items-start shadow-2xl lg:shadow-none w-full sticky lg:static bottom-0 bg-white  p-3 rounded-lg">
+{#if $problem.numbersLength<6}
     <OperatorButtons/>
+{/if}
+</div>
 {/if}
 
    

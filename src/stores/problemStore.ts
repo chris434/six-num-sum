@@ -14,6 +14,7 @@ type ProblemStoreType = {
     answerHasBeenChecked: boolean
     answerIsCorrect: boolean
     answerHasBeenShown: boolean
+    numbersLength: number
     problem: {
         expression: string
         result:number
@@ -24,7 +25,7 @@ type ProblemStoreType = {
 
 
 function problemStore() {
-    const INITIAL_DATA:ProblemStoreType={action:'number',userResult:0, userExpression:[], problem:{expression:"",result:0},numbers:[],answerHasBeenChecked:false,answerIsCorrect:false,answerHasBeenShown:false}
+    const INITIAL_DATA:ProblemStoreType={action:'number',userResult:0, userExpression:[], problem:{expression:"",result:0},numbers:[],answerHasBeenChecked:false,answerIsCorrect:false,answerHasBeenShown:false,numbersLength:0}
     const { subscribe, set, update } = writable<ProblemStoreType>(INITIAL_DATA)
 
    
@@ -59,7 +60,7 @@ function problemStore() {
 
         update((problem) => {
             const { action, value } = selectedExpression
-            const {numbers,userResult,userExpression}=problem
+            const { numbers, userResult, userExpression,numbersLength } = problem
             
             const mappedNumbers= action==='number'? numbers.map((number, i) => {
                 if(i===index) return {...number,used:true}
@@ -79,6 +80,7 @@ function problemStore() {
                 userExpression:newUserExpression,
                 action:action==='number'?'operator':'number',
                 numbers: mappedNumbers,
+                numbersLength:action==='number'?numbersLength+1:numbersLength,
                 answerHasBeenChecked:false
             }
          
@@ -97,6 +99,7 @@ function problemStore() {
                 userResult: 0,
                 action: 'number',
                 numbers: newNumbers,
+                numbersLength:0,
                 answerHasBeenChecked:false
             }
         })
@@ -126,7 +129,7 @@ function problemStore() {
 
     function deleteLast() {
         update(problem => {
-            const { userExpression } = problem
+            const { userExpression,numbersLength } = problem
             if (!userExpression.length) return {...problem, answerHasBeenChecked:false}
             const lastUserExpression =userExpression.at(-1)
            problem.userExpression.pop()
@@ -142,6 +145,7 @@ function problemStore() {
                 userResult:newUserResult,
                 action: lastUserExpression?.action||'number' ,
                 numbers: newNumbers,
+                numbersLength:lastUserExpression?.action==='number'?numbersLength-1:numbersLength,
                 answerHasBeenChecked:false
             }
         })

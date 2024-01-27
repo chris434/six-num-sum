@@ -1,6 +1,8 @@
 <script>
 	import FunctionButtons from "../components/FunctionButtons.svelte";
 	import AnswerBar from "../components/answerBar.svelte";
+	import CheckAnswerBar from "../components/checkAnswerBar.svelte";
+	import IncorrectAnswerBar from "../components/checkAnswerBar.svelte";
 	import NumberButtons from "../components/numberButtons.svelte";
 	import OperatorButtons from "../components/operatorButtons.svelte";
 	import SumBar from "../components/sumBar.svelte";
@@ -29,8 +31,11 @@
 </div>
 </div>
 <div class="items-start shadow-2xl lg:shadow-none w-full sticky lg:static bottom-0 bg-white  p-3 rounded-lg">
-{#if $problem.numbersLength<6}
-    <OperatorButtons/>
+
+{#if $problem.numbersLength===6}
+<CheckAnswerBar/>
+{:else}
+ <OperatorButtons/>
 {/if}
 </div>
 {/if}

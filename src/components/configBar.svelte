@@ -19,6 +19,7 @@
    function newProblem(){
     generateProblem(sumRange,targetRange,sumRangeCheck? $problem.numbers:undefined)
     newProblemCb()
+    configBarToggle=false
    }
   
 

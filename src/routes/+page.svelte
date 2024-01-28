@@ -16,6 +16,9 @@
 
 
 </script>
+<svelte:head>
+  <title>SIX  * NUM -  SUM</title>
+</svelte:head>
 {#if $problem.numbers.length}
 <div class="flex justify-center p-5 pb-0 ">
   <NumberButtons/>

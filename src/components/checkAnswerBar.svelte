@@ -2,6 +2,7 @@
     import {getProblem} from '../contexts/problemContext'
     import Button from './button.svelte'
     const problem=getProblem()
+    const {toggleHasBeenSubmitted}=problem
     $:answerCorrect=$problem.userResult===$problem.problem.result
 </script>
 <div class="flex justify-center gap-3">
@@ -9,6 +10,6 @@
 answer {answerCorrect?'correct':'incorrect'}
 </div>
 {#if answerCorrect}
-<Button>submit</Button>
+<Button onclick={toggleHasBeenSubmitted}>submit</Button>
 {/if}
 </div>

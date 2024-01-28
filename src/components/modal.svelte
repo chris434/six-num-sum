@@ -6,14 +6,16 @@
 	import SumBar from './sumBar.svelte';
     let dialog:HTMLDialogElement
     const problem = getProblem()
-    const {reset}=problem
+    const {reset,toggleHasBeenSubmitted}=problem
+
     
-   $:if(dialog&&$problem.answerHasBeenChecked&&$problem.answerIsCorrect) {
+   $:if($problem.hasBeenSubmitted) {
     dialog.showModal()
   }
    
-   function closeModal() {
+   function closeModal(toggle:boolean=false) {
     dialog.close()
+  if(toggle) toggleHasBeenSubmitted()
    }
     
 </script>
@@ -24,7 +26,7 @@
   <AnswerBar/>
   <div class="flex sm:flex-row flex-col justify-center gap-5 items-center">
     <div class="flex gap-5">
-       <Button onclick={closeModal}>close</Button>
+       <Button onclick={()=>closeModal(true)}>close</Button>
      <Button onclick={()=>{
       closeModal()
       reset()

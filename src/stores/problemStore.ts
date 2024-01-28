@@ -14,7 +14,8 @@ type ProblemStoreType = {
     answerHasBeenChecked: boolean
     answerIsCorrect: boolean
     answerHasBeenShown: boolean
-    numbersLength: number
+    numbersLength: number,
+    hasBeenSubmitted: boolean,
     problem: {
         expression: string
         result:number
@@ -25,7 +26,7 @@ type ProblemStoreType = {
 
 
 function problemStore() {
-    const INITIAL_DATA:ProblemStoreType={action:'number',userResult:0, userExpression:[], problem:{expression:"",result:0},numbers:[],answerHasBeenChecked:false,answerIsCorrect:false,answerHasBeenShown:false,numbersLength:0}
+    const INITIAL_DATA:ProblemStoreType={action:'number',userResult:0, userExpression:[], problem:{expression:"",result:0},numbers:[],answerHasBeenChecked:false,answerIsCorrect:false,answerHasBeenShown:false,numbersLength:0,hasBeenSubmitted:false}
     const { subscribe, set, update } = writable<ProblemStoreType>(INITIAL_DATA)
 
    
@@ -171,7 +172,14 @@ function problemStore() {
             return {...problem,answerHasBeenShown:true}
         })
     }
-return {subscribe,generateProblem,addToSum,clearSum,deleteLast,checkAnswer,reset,setAnswerHasBeenShown}
+    function toggleHasBeenSubmitted() {
+        update(problem => {
+            const {hasBeenSubmitted}=problem
+            return {...problem,hasBeenSubmitted:!hasBeenSubmitted}
+        })
+     }
+    
+return {subscribe,generateProblem,addToSum,clearSum,deleteLast,checkAnswer,reset,setAnswerHasBeenShown,toggleHasBeenSubmitted}
 }
 export type ProblemStoreReturnType = ReturnType<typeof problemStore>
 export const createProblem= problemStore()

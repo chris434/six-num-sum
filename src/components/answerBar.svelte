@@ -4,6 +4,7 @@
     const problem = getProblem()
 </script>
 
-<DisplayBar header='answer' className='border-green-400 bg-green-400 text-white '>
+<DisplayBar correct header='answer'>
 {$problem.problem.expression} = {$problem.problem.result}
 </DisplayBar>
+

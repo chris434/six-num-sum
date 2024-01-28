@@ -13,6 +13,9 @@ type ProblemStoreType = {
     userExpression: userExpressionType[]
     answerHasBeenChecked: boolean
     answerIsCorrect: boolean
+    answerHasBeenShown: boolean
+    numbersLength: number,
+    hasBeenSubmitted: boolean,
     problem: {
         expression: string
         result:number
@@ -23,22 +26,26 @@ type ProblemStoreType = {
 
 
 function problemStore() {
-    const INITIAL_DATA:ProblemStoreType={action:'number',userResult:0, userExpression:[], problem:{expression:"",result:0},numbers:[],answerHasBeenChecked:false,answerIsCorrect:false}
+    const INITIAL_DATA:ProblemStoreType={action:'number',userResult:0, userExpression:[], problem:{expression:"",result:0},numbers:[],answerHasBeenChecked:false,answerIsCorrect:false,answerHasBeenShown:false,numbersLength:0,hasBeenSubmitted:false}
     const { subscribe, set, update } = writable<ProblemStoreType>(INITIAL_DATA)
 
    
     
-    function generateProblem(sumRange: string, targetRange: TargetSumRangeType) {
- 
+    function generateProblem(sumRange: string, targetRange: TargetSumRangeType,sumNumbers?:ProblemNumbersType) {
+ console.log(sumNumbers)
         function setProblem(sumRange: number[], targetRange: TargetSumType) {
-            const randomNumbers=getRandomNumbers(sumRange)
+            const newSumNumbers = sumNumbers ? sumNumbers.map(numberObj => {
+                return {...numberObj,used:false}
+            }) : false
+            
+            const randomNumbers=newSumNumbers?newSumNumbers: getRandomNumbers(sumRange)
             const problems = getProblem(targetRange,randomNumbers)
             
       const problemsLength = problems.expressions.length
       if(problemsLength===0) return setProblem(sumRange, targetRange)
       const randomIndex = getRandomNumber(0,problemsLength)
       const problem = problems.expressions[randomIndex]
-      const shuffledNumbers = shuffleArray(randomNumbers)
+      const shuffledNumbers = newSumNumbers?newSumNumbers: shuffleArray(randomNumbers)
        return { problem,numbers:shuffledNumbers}
    }
 
@@ -47,16 +54,14 @@ function problemStore() {
          const mappedTargetRange= targetRange==='any'||targetRange==='+1000'?targetRange: targetRange.split('-').map(Number)
         const problem = setProblem(sumRangeArray, mappedTargetRange)
 
-        update(storedProblem => {
-            return {...storedProblem,...problem}
-        })
+        set({...INITIAL_DATA,...problem})
     }
 
     function addToSum(selectedExpression: PropUserExpressionType, index?: number) {
 
         update((problem) => {
             const { action, value } = selectedExpression
-            const {numbers,userResult,userExpression}=problem
+            const { numbers, userResult, userExpression,numbersLength } = problem
             
             const mappedNumbers= action==='number'? numbers.map((number, i) => {
                 if(i===index) return {...number,used:true}
@@ -76,6 +81,7 @@ function problemStore() {
                 userExpression:newUserExpression,
                 action:action==='number'?'operator':'number',
                 numbers: mappedNumbers,
+                numbersLength:action==='number'?numbersLength+1:numbersLength,
                 answerHasBeenChecked:false
             }
          
@@ -94,6 +100,7 @@ function problemStore() {
                 userResult: 0,
                 action: 'number',
                 numbers: newNumbers,
+                numbersLength:0,
                 answerHasBeenChecked:false
             }
         })
@@ -123,7 +130,7 @@ function problemStore() {
 
     function deleteLast() {
         update(problem => {
-            const { userExpression } = problem
+            const { userExpression,numbersLength } = problem
             if (!userExpression.length) return {...problem, answerHasBeenChecked:false}
             const lastUserExpression =userExpression.at(-1)
            problem.userExpression.pop()
@@ -139,6 +146,7 @@ function problemStore() {
                 userResult:newUserResult,
                 action: lastUserExpression?.action||'number' ,
                 numbers: newNumbers,
+                numbersLength:lastUserExpression?.action==='number'?numbersLength-1:numbersLength,
                 answerHasBeenChecked:false
             }
         })
@@ -159,7 +167,19 @@ function problemStore() {
             }
         })
     }
-return {subscribe,generateProblem,addToSum,clearSum,deleteLast,checkAnswer,reset}
+    function setAnswerHasBeenShown() {
+        update(problem => {
+            return {...problem,answerHasBeenShown:true}
+        })
+    }
+    function toggleHasBeenSubmitted() {
+        update(problem => {
+            const {hasBeenSubmitted}=problem
+            return {...problem,hasBeenSubmitted:!hasBeenSubmitted}
+        })
+     }
+    
+return {subscribe,generateProblem,addToSum,clearSum,deleteLast,checkAnswer,reset,setAnswerHasBeenShown,toggleHasBeenSubmitted}
 }
 export type ProblemStoreReturnType = ReturnType<typeof problemStore>
 export const createProblem= problemStore()

@@ -38,7 +38,7 @@ function calculate(expression: string) {
   const operators = expression.split(/[\d.]+/).filter(Boolean) as  OperatorType[]
   const numbers = expression.split(/[+\-*/]/).map(Number);
   let result = numbers[0]
-console.log(numbers)
+
   for (let i = 0; i < operators.length; i++) {
     // switch (operators[i]) {
     //   case '+':
@@ -61,7 +61,7 @@ console.log(numbers)
     //     break;
     // }
     result = calculateSwitch(operators[i], numbers[i + 1], result)
-    console.log(result)
+
   }
 
   return result;

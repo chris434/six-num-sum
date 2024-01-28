@@ -27,7 +27,7 @@
 <section class="w-full" >
     <Button className='md:hidden block' selected={configBarToggle} onclick={()=> configBarToggle= !configBarToggle}>Config problem</Button>
     <div  class=" gap-5 items-center md:flex-row flex-col w-full justify-between mt-5 md:mt-0 {configBarToggle?'flex':'md:flex hidden'}">
-       <div  class="flex gap-5 items-center md:justify-normal xs:flex-row flex-col   justify-around md:w-auto w-full">
+       <div  class="flex gap-5 items-center md:justify-normal xs:flex-row flex-col justify-around md:w-auto w-full">
         <Select bind:option={sumRange}   label="Sum" options={SUM_RANGE} />
         <Select bind:option={targetRange}  label="Target" options={TARGET_RANGE} />
     </div>

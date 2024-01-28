@@ -13,7 +13,7 @@ $:canReset=  numberBeenClicked||answerHasBeenChecked||answerHasBeenShown?true:fa
     
 </script>
 
-<div class="flex items-start gap-3 p-5 shadow-xl">
+<div class="flex items-start gap-3 p-3 shadow-xl">
     <ConfigBar/>
     {#if canReset}
     <Button onclick={reset}>rest</Button>

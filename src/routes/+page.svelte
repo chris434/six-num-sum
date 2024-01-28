@@ -17,7 +17,7 @@
 
 </script>
 {#if $problem.numbers.length}
-<div class="flex justify-center p-5 ">
+<div class="flex justify-center p-5 pb-0 ">
   <NumberButtons/>
 </div>
 <div class="flex items-center p-5 pb-0 flex-col relative ">
